@@ -34,12 +34,10 @@ app.use("/api/v1", router);
 if (process.env.NODE_ENV === "developments") {
   app.use(morgan("dev"));
   console.log(`Mode : ${process.env.NODE_ENV}`);
-} else {
-  console.log(`Mode : ${process.env.NODE_ENV}`);
 }
 
 app.get("/", (req, res) => {
-  res.send("Home Page");
+  res.send("API is running...");
 });
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route ${req.originalUrl}`, 400));
@@ -47,7 +45,7 @@ app.all("*", (req, res, next) => {
 // Get error handling middleware
 app.use(GlobelError);
 
-const Port = process.env.PORT || 5000;
+const Port = process.env.PORT || 8000;
 
 const server = app.listen(Port, () => {
   console.log(`Server Running with server ${Port}`);
