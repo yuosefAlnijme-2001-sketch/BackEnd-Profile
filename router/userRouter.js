@@ -22,7 +22,7 @@ router.get("/getme", authServices.protect, getLoggedUserData, GetOneUser);
 router.put(
   "/changePassword/:id",
   authServices.protect,
-  authServices.allowedTo("user"),
+  authServices.allowedTo("user", "admin"),
   changeUserPasswordValidator,
   ChangePassword
 );
@@ -43,7 +43,7 @@ router
   .get(GetOneUser)
   .put(
     authServices.protect,
-    authServices.allowedTo("admin"),
+    authServices.allowedTo("admin", "user"),
     uploadCategorySingleImage,
     resizeImage,
     UpdateUser

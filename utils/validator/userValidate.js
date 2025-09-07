@@ -70,28 +70,29 @@ exports.UpdateUserValidate = [
 ];
 
 exports.changeUserPasswordValidator = [
-  check("id").isMongoId().withMessage("Invalid ID formate"),
-  check("currentPassword").notEmpty().withMessage("currentPassword required"),
-  check("passwordConfirm").notEmpty().withMessage("passwordConfirm required"),
-  check("newPassword")
+  check("id").isMongoId().withMessage("Invalid format id"),
+  check("currentPassword").notEmpty().withMessage("Please Inter Old Password"),
+  check("passwordConfirm").notEmpty().withMessage("Please Inter New Password"),
+  check("password")
     .notEmpty()
-    .withMessage("Password Required")
+    .withMessage("Please Inter confirm New Password")
     .custom(async (val, { req }) => {
-      // 1- Verify current password
       const user = await User.findById(req.params.id);
-      const isCorrectPassword = await bcrypt.compare(
+      if (!user) {
+        throw new Error("There is no user for this id");
+      }
+      const isCurrentPassword = await bcrypt.compare(
         req.body.currentPassword,
         user.password
       );
-      if (!isCorrectPassword) {
-        throw new Error(`Incorrect current password`);
+      if (!isCurrentPassword) {
+        throw new Error("Please enter a correct password.");
       }
-      // 2- Verify confirmation password
-      if (val !== req.body.passwordConfirm) {
-        throw new Error(`Password confirmation is incorrect`);
+
+      if (req.body.passwordConfirm !== val) {
+        throw new Error("new_Password or confirmNewPassword is not correct");
       }
       return true;
     }),
-
   validMiddleware,
 ];
